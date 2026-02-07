@@ -1,0 +1,842 @@
+{
+  "name": "Watsons",
+  "created_at": "2026-02-07 19:04:23",
+  "last_modified": "2026-02-07 23:39:11",
+  "csv_data": "",
+  "schedule": {
+    "132-AKASYA": [
+      "09.02.2026"
+    ],
+    "149-RINGS": [
+      "16.02.2026"
+    ],
+    "15-BAHARIYE SERASKER": [
+      "10.02.2026"
+    ],
+    "155-USKUDAR": [
+      "07.02.2026"
+    ],
+    "160-GOZTEPE": [
+      "04.02.2026"
+    ],
+    "172-KARTAL": [
+      "1. Gün"
+    ],
+    "186-CADDEBOSTAN": [
+      "04.02.2026"
+    ],
+    "2-CAPITOL": [
+      "09.02.2026"
+    ],
+    "213-WORKSQUARE": [
+      "17.02.2026"
+    ],
+    "232-AKYAKA PARK": [
+      "11.02.2026"
+    ],
+    "24-NEOMARIN": [
+      "18.02.2026"
+    ],
+    "241-VIAPORT": [
+      "1. Gün"
+    ],
+    "255-BAHARIYE": [
+      "10.02.2026"
+    ],
+    "260-SASKINBAKKAL": [
+      "04.02.2026"
+    ],
+    "305-ALTINTEPE": [
+      "05.02.2026"
+    ],
+    "331-AYSEKADIN": [
+      "05.02.2026"
+    ],
+    "34-KOZZY": [
+      "05.02.2026"
+    ],
+    "348-PALLADIUM ATASEHIR": [
+      "19.02.2026"
+    ],
+    "361-ISTMARINA": [
+      "1. Gün"
+    ],
+    "363-ANATOLIUM MARMARA": [
+      "1. Gün"
+    ],
+    "364-MALTEPE PIAZZA": [
+      "1. Gün"
+    ],
+    "420-NEV CARSI": [
+      "07.02.2026"
+    ],
+    "426-LENS ISTANBUL": [
+      "17.02.2026"
+    ],
+    "431-USKUDAR MEYDAN": [
+      "07.02.2026"
+    ],
+    "439-PENDIK": [
+      "18.02.2026"
+    ],
+    "443-KADIKOY CARSI": [
+      "10.02.2026"
+    ],
+    "470-ATLASPARK": [
+      "1. Gün"
+    ],
+    "473-MCA AVM": [
+      "06.02.2026"
+    ],
+    "489-HILLTOWN": [
+      "06.02.2026"
+    ],
+    "500-IDEALTEPE": [
+      "06.02.2026"
+    ],
+    "544-CEBECI AVM": [
+      "18.02.2026"
+    ],
+    "549-SILE": [
+      "19.02.2026"
+    ],
+    "79-NAUTILUS": [
+      "09.02.2026"
+    ],
+    "393-ACRLOFT": [
+      "1. Gün"
+    ],
+    "355-KANLICA": [
+      "1. Gün"
+    ],
+    "159-GRAND HOUSE": [
+      "1. Gün"
+    ],
+    "508-MALTEPE CADDE": [
+      "1. Gün"
+    ],
+    "188-YAYLADA": [
+      "1. Gün"
+    ],
+    "250-RITIM ISTANBUL": [
+      "1. Gün"
+    ],
+    "117-CARREFOUR MALTEPE PARK": [
+      "1. Gün"
+    ]
+  },
+  "daily_order": {
+    "09.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "132-AKASYA",
+        "2-CAPITOL",
+        "79-NAUTILUS"
+      ]
+    },
+    "16.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "149-RINGS"
+      ]
+    },
+    "10.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "15-BAHARIYE SERASKER",
+        "255-BAHARIYE",
+        "443-KADIKOY CARSI"
+      ]
+    },
+    "07.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "155-USKUDAR",
+        "420-NEV CARSI",
+        "431-USKUDAR MEYDAN"
+      ]
+    },
+    "04.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "160-GOZTEPE",
+        "186-CADDEBOSTAN",
+        "260-SASKINBAKKAL"
+      ]
+    },
+    "1. Gün": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "364-MALTEPE PIAZZA",
+        "363-ANATOLIUM MARMARA",
+        "361-ISTMARINA",
+        "172-KARTAL",
+        "470-ATLASPARK",
+        "241-VIAPORT",
+        "393-ACRLOFT",
+        "355-KANLICA",
+        "159-GRAND HOUSE",
+        "508-MALTEPE CADDE",
+        "188-YAYLADA",
+        "250-RITIM ISTANBUL",
+        "117-CARREFOUR MALTEPE PARK"
+      ]
+    },
+    "17.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "213-WORKSQUARE",
+        "426-LENS ISTANBUL"
+      ]
+    },
+    "11.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "232-AKYAKA PARK"
+      ]
+    },
+    "18.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "24-NEOMARIN",
+        "439-PENDIK",
+        "544-CEBECI AVM"
+      ]
+    },
+    "05.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "305-ALTINTEPE",
+        "331-AYSEKADIN",
+        "34-KOZZY"
+      ]
+    },
+    "19.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "348-PALLADIUM ATASEHIR",
+        "549-SILE"
+      ]
+    },
+    "06.02.2026": {
+      "M1-MUHAMMED ALİ AYDOĞDU": [
+        "473-MCA AVM",
+        "489-HILLTOWN",
+        "500-IDEALTEPE"
+      ]
+    }
+  },
+  "store_notes": {
+    "159-GRAND HOUSE": "123"
+  },
+  "edited_stores": {
+    "159-GRAND HOUSE": {}
+  },
+  "empty_days": {},
+  "stores": [
+    {
+      "Boylam": "29.015753",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.067295",
+      "Id": "8955951",
+      "Mağaza İsmi": "186-CADDEBOSTAN",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-04 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.0226761",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.055991",
+      "Id": "8955952",
+      "Mağaza İsmi": "160-GOZTEPE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-04 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.0258624",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0500506",
+      "Id": "8955953",
+      "Mağaza İsmi": "260-SASKINBAKKAL",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-04 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.0262412166139",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0496941692093",
+      "Id": "8955954",
+      "Mağaza İsmi": "305-ALTINTEPE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-05 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.0254277598925",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0498968730471",
+      "Id": "8955955",
+      "Mağaza İsmi": "331-AYSEKADIN",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-05 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.0069864123696",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0446953047882",
+      "Id": "8955956",
+      "Mağaza İsmi": "34-KOZZY",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-05 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.007229",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.044529",
+      "Id": "8955957",
+      "Mağaza İsmi": "489-HILLTOWN",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-06 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.004725",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.042267",
+      "Id": "8955958",
+      "Mağaza İsmi": "500-IDEALTEPE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-06 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.0045890808105",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0426521301269",
+      "Id": "8955959",
+      "Mağaza İsmi": "473-MCA AVM",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-06 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.0030968",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0449663",
+      "Id": "8955960",
+      "Mağaza İsmi": "420-NEV CARSI",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-07 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Üsküdar"
+    },
+    {
+      "Boylam": "29.0155544281005",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0669937133789",
+      "Id": "8955961",
+      "Mağaza İsmi": "155-USKUDAR",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-07 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Üsküdar"
+    },
+    {
+      "Boylam": "29.0155544281005",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0669937133789",
+      "Id": "8955962",
+      "Mağaza İsmi": "431-USKUDAR MEYDAN",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-07 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Üsküdar"
+    },
+    {
+      "Boylam": "29.0041741663344",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0430601656535",
+      "Id": "8955963",
+      "Mağaza İsmi": "2-CAPITOL",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-09 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Üsküdar"
+    },
+    {
+      "Boylam": "29.256041",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.969564",
+      "Id": "8955964",
+      "Mağaza İsmi": "79-NAUTILUS",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-09 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.2555618286132",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9696197509765",
+      "Id": "8955946",
+      "Mağaza İsmi": "132-AKASYA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-09 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Üsküdar"
+    },
+    {
+      "Boylam": "29.2553204",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9695808",
+      "Id": "8955966",
+      "Mağaza İsmi": "255-BAHARIYE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-10 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.260871",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.969293",
+      "Id": "8955967",
+      "Mağaza İsmi": "15-BAHARIYE SERASKER",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-10 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.2660702",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9675293",
+      "Id": "8955968",
+      "Mağaza İsmi": "443-KADIKOY CARSI",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-10 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kadıköy"
+    },
+    {
+      "Boylam": "29.2659492492675",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9675636291503",
+      "Id": "8955969",
+      "Mağaza İsmi": "232-AKYAKA PARK",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-11 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Ümraniye"
+    },
+    {
+      "Boylam": "29.309525",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.927345",
+      "Id": "8955990",
+      "Mağaza İsmi": "393-ACRLOFT",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-11 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Beykoz"
+    },
+    {
+      "Boylam": "29.312156677246",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9272880554199",
+      "Id": "8955971",
+      "Mağaza İsmi": "355-KANLICA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-11 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Beykoz"
+    },
+    {
+      "Boylam": "29.3112297058105",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9266281127929",
+      "Id": "8955972",
+      "Mağaza İsmi": "159-GRAND HOUSE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-12 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.327253859369",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9360045980848",
+      "Id": "8955973",
+      "Mağaza İsmi": "508-MALTEPE CADDE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-12 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.3235423246089",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9382775437017",
+      "Id": "8955974",
+      "Mağaza İsmi": "188-YAYLADA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-12 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.323278",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.938279",
+      "Id": "8955975",
+      "Mağaza İsmi": "250-RITIM ISTANBUL",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-13 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.322063",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.939237",
+      "Id": "8955976",
+      "Mağaza İsmi": "117-CARREFOUR MALTEPE PARK",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-13 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.028651",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.98877",
+      "Id": "8955977",
+      "Mağaza İsmi": "364-MALTEPE PIAZZA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-13 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Maltepe"
+    },
+    {
+      "Boylam": "29.028457",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9873281",
+      "Id": "8955978",
+      "Mağaza İsmi": "363-ANATOLIUM MARMARA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-14 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kartal"
+    },
+    {
+      "Boylam": "29.027021408081",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9874458312988",
+      "Id": "8955979",
+      "Mağaza İsmi": "361-ISTMARINA",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-14 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kartal"
+    },
+    {
+      "Boylam": "29.028135",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.989491",
+      "Id": "8955980",
+      "Mağaza İsmi": "172-KARTAL",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-14 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Kartal"
+    },
+    {
+      "Boylam": "29.025929",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.989799",
+      "Id": "8955981",
+      "Mağaza İsmi": "367-PLATO AVM",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-16 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Sultanbeyli"
+    },
+    {
+      "Boylam": "29.0287864056045",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9897787772994",
+      "Id": "8955982",
+      "Mağaza İsmi": "470-ATLASPARK",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-16 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Sultanbeyli"
+    },
+    {
+      "Boylam": "29.0241779",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9899008",
+      "Id": "8955983",
+      "Mağaza İsmi": "149-RINGS",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-16 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Sancaktepe"
+    },
+    {
+      "Boylam": "29.024378",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.990967",
+      "Id": "8955984",
+      "Mağaza İsmi": "426-LENS ISTANBUL",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-17 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "29.0245876312255",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9905433654785",
+      "Id": "8955985",
+      "Mağaza İsmi": "213-WORKSQUARE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-17 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "29.030385",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.991207",
+      "Id": "8955986",
+      "Mağaza İsmi": "241-VIAPORT",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-17 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "29.0290660858154",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9918632507324",
+      "Id": "8955987",
+      "Mağaza İsmi": "544-CEBECI AVM",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-18 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "29.023906",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.990202",
+      "Id": "8955988",
+      "Mağaza İsmi": "24-NEOMARIN",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-18 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "29.0239658355712",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "40.9901504516601",
+      "Id": "8955989",
+      "Mağaza İsmi": "439-PENDIK",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-18 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Pendik"
+    },
+    {
+      "Boylam": "28.992871",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.051073",
+      "Id": "8955950",
+      "Mağaza İsmi": "348-PALLADIUM ATASEHIR",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-19 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Ataşehir"
+    },
+    {
+      "Boylam": "29.0151653289794",
+      "Bölge": "İst. Anadolu",
+      "City": "İSTANBUL",
+      "Enlem": "41.0759353637695",
+      "Id": "8955991",
+      "Mağaza İsmi": "549-SILE",
+      "Personel": "M1-MUHAMMED ALİ AYDOĞDU",
+      "Plan Bitiş": "2026-02-19 00:00:00",
+      "Plan Notu": "Planlı Rut",
+      "Plan Tarihi": "2026-02-19 00:00:00",
+      "Öncelik": "Orta",
+      "İl": "İstanbul",
+      "İlçe": "Şile"
+    }
+  ]
+}

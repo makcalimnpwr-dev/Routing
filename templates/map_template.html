@@ -1,0 +1,42 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>İnteraktif Rota Planlayıcı</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+        <style>
+            body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; }
+            #map { height: 100%; width: 75%; }
+            #sidebar { width: 25%; padding: 15px; box-sizing: border-box; overflow-y: auto; background: #f4f4f4; }
+        </style>
+    </head>
+    <body>
+        <div id="sidebar">
+            <h3>Kontrol Paneli</h3>
+            <input type="file" id="fileUpload" accept=".xlsx, .xls">
+            <button onclick="uploadAndDraw()">Yükle ve Haritada Göster</button>
+            <hr>
+            <button onclick="downloadSchedule()">Planı Excel Olarak İndir</button>
+            <div id="info" style="display:none; margin-top:15px;">
+                <h4 id="storeName"></h4>
+                <input type="date" id="visitDate">
+                <button onclick="assignVisit()">Bu Güne Ata</button>
+            </div>
+            <div id="plan" style="margin-top:15px;">
+                <h3>Güncel Plan</h3>
+                <div id="scheduleView"></div>
+            </div>
+        </div>
+        <div id="map"></div>
+        <script>
+            // ... Tüm JavaScript kodu buraya gelecek ...
+            // Lütfen bir önceki yanıttaki script etiketinin içeriğini buraya kopyalayın
+        </script>
+    </body>
+    </html>
+    

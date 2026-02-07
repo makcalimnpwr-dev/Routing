@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota Karşılaştırma Aracı</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <style>
+        /* ... CSS kısmı aynı, değişmedi ... */
+        body { font-family: Arial, sans-serif; display: flex; height: 100vh; margin: 0; }
+        #sidebar { width: 350px; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); overflow-y: auto; }
+        #map { flex-grow: 1; height: 100%; }
+        .section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ccc; }
+        .error { color: red; font-weight: bold; margin-top: 10px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        .nav-link { display: inline-block; margin-bottom: 20px; padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .legend { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+        .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.9; }
+        .leaflet-popup-content { min-width: 200px; }
+        .address-info { font-style: italic; color: #555; margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px; }
+        .duration-info { font-weight: bold; color: #c0392b; }
+        select { width:100%; padding: 8px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <a href="/" class="nav-link">&larr; Planlama Aracına Dön</a>
+    <h2>Rota Karşılaştırma</h2>
+    
+    <div class="section">
+        <form method="post" enctype="multipart/form-data">
+            <label for="file_stores">1. Mağaza (Plan) Excel'i:</label>
+            <input type="file" name="file_stores" id="file_stores" required>
+            <small>'mağaza ismi', 'enlem', 'boylam', 'tarih', 'saat'</small>
+
+            <label for="file_vehicle">2. Araç Rota Excel'i:</label>
+            <input type="file" name="file_vehicle" id="file_vehicle" required>
+            <small>'enlem', 'boylam', 'tarih', 'saat', (opsiyonel: 'durma süresi')</small>
+            
+            <button type="submit" style="width:100%; margin-top:20px; padding:10px;">Karşılaştır</button>
+        </form>
+        {% if error %} <p class="error">{{ error }}</p> {% endif %}
+    </div>
+
+    <div class="section">
+        <h3>Filtrele</h3>
+        <label for="storeDateFilter">Mağaza Tarihi:</label>
+        <select id="storeDateFilter"><option value="all">Tümü</option></select>
+        
+        <label for="vehicleDateFilter">Araç Tarihi:</label>
+        <select id="vehicleDateFilter"><option value="all">Tümü</option></select>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script>
+    const map = L.map('map').setView([39, 35], 6);
+    const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' });
+    const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri' });
+    satelliteMap.addTo(map);
+    L.control.layers({ "Uydu Görüntüsü": satelliteMap, "Sokak Haritası": streetMap }).addTo(map);
+
+    const blueIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
+    const redIcon = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
+
+    const storesData = {{ stores_data | safe or '[]' }};
+    const vehicleData = {{ vehicle_data | safe or '[]' }};
+
+    function fetchAddress(lat, lon, popup) { /* ... Bu fonksiyon değişmedi ... */ }
+    function applyFilters() { /* ... Bu fonksiyon değişmedi ... */ }
+    
+    if (storesData.length > 0 || vehicleData.length > 0) {
+        // ...
+        storesData.forEach(d => {
+            d.type = 'store';
+            const marker = L.marker([d.enlem, d.boylam], { icon: blueIcon, pointData: d })
+                .bindPopup(`<b>${d['mağaza ismi']}</b><br>Tarih: ${d.tarih} | Saat: ${d.saat}<div class="address-info">Adres yükleniyor...</div>`)
+                .addTo(map);
+            marker.on('popupopen', e => fetchAddress(d.enlem, d.boylam, e.popup));
+        });
+
+        vehicleData.forEach(d => {
+            d.type = 'vehicle';
+
+            // === GÜNCELLEME: 'durma süresi' verisini popup'a ekle ===
+            let popupContent = `<b>Araç Noktası</b><br>Tarih: ${d.tarih} | Saat: ${d.saat}`;
+            
+            // Eğer 'durma süresi' verisi varsa ve boş değilse, popup içeriğine ekle
+            const durmaSuresi = d['durma süresi'];
+            if (durmaSuresi && durmaSuresi.trim() !== '' && durmaSuresi.trim() !== 'nan') {
+                popupContent += `<br><span class="duration-info">Durma Süresi: ${durmaSuresi}</span>`;
+            }
+            
+            popupContent += `<div class="address-info">Adres yükleniyor...</div>`;
+
+            const marker = L.marker([d.enlem, d.boylam], { icon: redIcon, pointData: d })
+                .bindPopup(popupContent)
+                .addTo(map);
+            marker.on('popupopen', e => fetchAddress(d.enlem, d.boylam, e.popup));
+        });
+        
+        // ... geri kalan kod aynı ...
+        const allPoints=[...storesData,...vehicleData];const bounds=L.latLngBounds(allPoints.map(p=>[p.enlem,p.boylam]));if(bounds.isValid())map.fitBounds(bounds,{padding:[50,50]});const storeFilter=document.getElementById("storeDateFilter"),vehicleFilter=document.getElementById("vehicleDateFilter"),storeDates=[...new Set(storesData.map(p=>p.tarih))].sort(),vehicleDates=[...new Set(vehicleData.map(p=>p.tarih))].sort();storeDates.forEach(date=>{if(date)storeFilter.add(new Option(date,date))});vehicleDates.forEach(date=>{if(date)vehicleFilter.add(new Option(date,date))})
+    }
+    
+    document.getElementById('storeDateFilter').addEventListener('change', applyFilters);
+    document.getElementById('vehicleDateFilter').addEventListener('change', applyFilters);
+
+    const legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) { /* ... Bu fonksiyon değişmedi ... */ };
+    legend.addTo(map);
+
+    const drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+    const drawControl = new L.Control.Draw({ edit: { featureGroup: drawnItems }, draw: { polygon: false, polyline: { shapeOptions: { color: 'blue' } }, rectangle: false, circle: false, marker: false, circlemarker: false } });
+    map.addControl(drawControl);
+    map.on(L.Draw.Event.CREATED, function (e) { /* ... Bu fonksiyon değişmedi ... */ });
+
+    // Değişmeyen fonksiyonları tam olarak ekleyelim
+    function fetchAddress(lat,lon,popup){const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;fetch(url).then(response=>response.json()).then(data=>{const content=popup.getContent(),addressHtml=`<div class="address-info">${data&&data.display_name?data.display_name:"Adres bilgisi bulunamadı."}</div>`;popup.setContent(content.split('<div class="address-info">')[0]+addressHtml)}).catch(err=>console.error("Adres getirme hatası:",err))}
+    function applyFilters(){const storeDate=document.getElementById("storeDateFilter").value,vehicleDate=document.getElementById("vehicleDateFilter").value;map.eachLayer(layer=>{if(layer.options.pointData){const point=layer.options.pointData;let show=!1;point.type==="store"&&(storeDate==="all"||point.tarih===storeDate)&&(show=!0),point.type==="vehicle"&&(vehicleDate==="all"||point.tarih===vehicleDate)&&(show=!0),show?layer.addTo(map):layer.removeFrom(map)}})}
+    legend.onAdd=function(map){const div=L.DomUtil.create("div","info legend");return div.innerHTML='<h4>Lejant</h4><i style="background: #3388ff;"></i> Mağaza (Plan)<br><i style="background: #d42a1e;"></i> Araç Rotası (Gerçekleşen)',div};
+    map.on(L.Draw.Event.CREATED,function(e){const layer=e.layer;drawnItems.addLayer(layer);const latlngs=layer.getLatLngs();if(latlngs.length>=2){fetch("/get_route",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({start:latlngs[0],end:latlngs[latlngs.length-1]})}).then(response=>response.json()).then(data=>{"success"===data.status?layer.bindPopup(`<b>Mesafe:</b> ${data.km} km<br><b>Süre:</b> ${data.min} dakika`).openPopup():alert("Rota hesaplanamadı: "+data.message)})}})
+</script>
+</body>
+</html>

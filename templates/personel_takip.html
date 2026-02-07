@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Takip Sistemi</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header-section {
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 400px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .upload-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .upload-section h4 {
+            margin-top: 0;
+            color: #343a40;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn-upload {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-upload:hover {
+            background-color: #218838;
+        }
+        .filter-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .filter-section select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .info-section {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #555;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-loaded {
+            background-color: #28a745;
+            color: white;
+        }
+        .status-empty {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h3 style="margin: 0;">Personel Takip Sistemi</h3>
+        <a href="/" class="btn btn-light btn-sm">← Ana Sayfaya Dön</a>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <!-- Kontak Bazlı Rapor Yükleme -->
+            <div class="upload-section">
+                <h4>📊 Kontak Bazlı Rapor</h4>
+                <div class="form-group">
+                    <label for="contactReportFile">Excel Dosyası Seçin:</label>
+                    <input type="file" id="contactReportFile" accept=".xlsx,.xls">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Gerekli sütunlar: <strong>Sürücü</strong>, <strong>Başlangıç Enlem</strong>, <strong>Başlangıç Boylam</strong>, <strong>Bitiş Enlem</strong>, <strong>Bitiş Boylam</strong>
+                    </small>
+                </div>
+                <button class="btn-upload" onclick="uploadContactReport()">Raporu Yükle</button>
+                <div id="contactReportStatus" style="margin-top: 10px;">
+                    <span class="status-badge status-empty">Yüklenmedi</span>
+                </div>
+            </div>
+
+            <!-- Mağazaların Konumu Yükleme -->
+            <div class="upload-section">
+                <h4>📍 Mağazaların Konumu</h4>
+                <div class="form-group">
+                    <label for="storeLocationFile">Excel Dosyası Seçin:</label>
+                    <input type="file" id="storeLocationFile" accept=".xlsx,.xls">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Gerekli sütunlar: <strong>Personel</strong>, <strong>Enlem</strong>, <strong>Boylam</strong>
+                    </small>
+                </div>
+                <button class="btn-upload" onclick="uploadStoreLocations()">Mağaza Konumlarını Yükle</button>
+                <div id="storeLocationStatus" style="margin-top: 10px;">
+                    <span class="status-badge status-empty">Yüklenmedi</span>
+                </div>
+            </div>
+
+            <!-- Sürücü Filtresi -->
+            <div class="filter-section">
+                <h4 style="margin-top: 0; font-size: 16px;">🔍 Sürücü Filtresi</h4>
+                <div class="form-group">
+                    <label for="driverFilter">Sürücü Seçin:</label>
+                    <select id="driverFilter">
+                        <option value="all">Tümü</option>
+                    </select>
+                </div>
+                <button class="btn-upload" onclick="applyDriverFilter()" style="background-color: #007bff;">Filtrele</button>
+                <button class="btn-upload" onclick="clearAllRoutes()" style="background-color: #dc3545; margin-top: 5px;">Tümünü Temizle</button>
+            </div>
+
+            <!-- Bilgi Bölümü -->
+            <div class="info-section">
+                <strong>ℹ️ Nasıl Kullanılır?</strong>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Önce Kontak Bazlı Rapor dosyasını yükleyin</li>
+                    <li>Sonra Mağazaların Konumu dosyasını yükleyin</li>
+                    <li>Sürücü filtresinden bir sürücü seçerek rotaları görüntüleyin</li>
+                    <li>Mağaza konumları ve sürücü rotaları harita üzerinde gösterilir</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Harita başlatma
+        const map = L.map('map').setView([39, 35], 6);
+        
+        // Harita katmanları
+        const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        });
+        streetMap.addTo(map);
+
+        // Veri saklama
+        let contactReportData = [];
+        let storeLocationData = [];
+        let routeLayers = [];
+        let storeMarkers = [];
+
+        // Kontak Bazlı Rapor yükleme
+        async function uploadContactReport() {
+            const fileInput = document.getElementById('contactReportFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Lütfen bir dosya seçin!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/personel_takip/upload_contact_report', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    contactReportData = result.data;
+                    updateDriverFilter();
+                    updateContactReportStatus(true, contactReportData.length);
+                    alert(`Rapor başarıyla yüklendi! ${contactReportData.length} kayıt bulundu.`);
+                } else {
+                    alert('Hata: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Dosya yüklenirken bir hata oluştu!');
+            }
+        }
+
+        // Mağazaların Konumu yükleme
+        async function uploadStoreLocations() {
+            const fileInput = document.getElementById('storeLocationFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Lütfen bir dosya seçin!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/personel_takip/upload_store_locations', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    storeLocationData = result.data;
+                    updateStoreLocationStatus(true, storeLocationData.length);
+                    drawStoreMarkers();
+                    alert(`Mağaza konumları başarıyla yüklendi! ${storeLocationData.length} mağaza bulundu.`);
+                } else {
+                    alert('Hata: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('Dosya yüklenirken bir hata oluştu!');
+            }
+        }
+
+        // Sürücü filtresini güncelle
+        function updateDriverFilter() {
+            const driverFilter = document.getElementById('driverFilter');
+            const drivers = [...new Set(contactReportData.map(item => item.Sürücü || item.sürücü || item.SURUCU).filter(Boolean))];
+            
+            // Mevcut seçenekleri temizle (Tümü hariç)
+            while (driverFilter.options.length > 1) {
+                driverFilter.remove(1);
+            }
+            
+            // Sürücüleri ekle
+            drivers.sort().forEach(driver => {
+                const option = document.createElement('option');
+                option.value = driver;
+                option.textContent = driver;
+                driverFilter.add(option);
+            });
+        }
+
+        // Sürücü filtresini uygula
+        async function applyDriverFilter() {
+            const selectedDriver = document.getElementById('driverFilter').value;
+            
+            if (selectedDriver === 'all') {
+                alert('Lütfen bir sürücü seçin!');
+                return;
+            }
+
+            if (contactReportData.length === 0) {
+                alert('Önce Kontak Bazlı Rapor dosyasını yükleyin!');
+                return;
+            }
+
+            // Seçili sürücünün rotalarını filtrele
+            const driverRoutes = contactReportData.filter(item => {
+                const driver = item.Sürücü || item.sürücü || item.SURUCU;
+                return driver === selectedDriver;
+            });
+
+            if (driverRoutes.length === 0) {
+                alert('Seçili sürücü için rota bulunamadı!');
+                return;
+            }
+
+            // Mevcut rotaları temizle
+            clearRoutes();
+
+            // Rotaları çiz
+            await drawRoutes(driverRoutes);
+            
+            alert(`${selectedDriver} için ${driverRoutes.length} rota çizildi.`);
+        }
+
+        // Rotaları çiz
+        async function drawRoutes(routes) {
+            for (const route of routes) {
+                const startLat = parseFloat(route['Başlangıç Enlem'] || route['başlangıç enlem'] || route['BASLANGIC_ENLEM'] || route['Başlangıç_Enlem']);
+                const startLon = parseFloat(route['Başlangıç Boylam'] || route['başlangıç boylam'] || route['BASLANGIC_BOYLAM'] || route['Başlangıç_Boylam']);
+                const endLat = parseFloat(route['Bitiş Enlem'] || route['bitiş enlem'] || route['BITIS_ENLEM'] || route['Bitiş_Enlem']);
+                const endLon = parseFloat(route['Bitiş Boylam'] || route['bitiş boylam'] || route['BITIS_BOYLAM'] || route['Bitiş_Boylam']);
+
+                if (isNaN(startLat) || isNaN(startLon) || isNaN(endLat) || isNaN(endLon)) {
+                    console.warn('Geçersiz koordinat:', route);
+                    continue;
+                }
+
+                try {
+                    // OSRM ile rota hesapla
+                    const response = await fetch(`http://localhost:5000/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?overview=full&geometries=geojson`);
+                    const data = await response.json();
+
+                    if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                        const routeGeometry = data.routes[0].geometry.coordinates;
+                        const path = routeGeometry.map(coord => [coord[1], coord[0]]); // [lat, lon]
+
+                        // Rota çizgisi
+                        const routeLine = L.polyline(path, {
+                            color: '#007bff',
+                            weight: 4,
+                            opacity: 0.7
+                        }).addTo(map);
+
+                        routeLayers.push(routeLine);
+
+                        // Başlangıç marker'ı
+                        const startMarker = L.marker([startLat, startLon], {
+                            icon: L.divIcon({
+                                className: 'start-marker',
+                                html: '<div style="background-color: #28a745; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                                iconSize: [12, 12]
+                            })
+                        }).addTo(map);
+                        routeLayers.push(startMarker);
+
+                        // Bitiş marker'ı
+                        const endMarker = L.marker([endLat, endLon], {
+                            icon: L.divIcon({
+                                className: 'end-marker',
+                                html: '<div style="background-color: #dc3545; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>',
+                                iconSize: [12, 12]
+                            })
+                        }).addTo(map);
+                        routeLayers.push(endMarker);
+
+                        // Haritayı rotalara göre ayarla
+                        if (routeLayers.length === 1) {
+                            const bounds = L.latLngBounds(path);
+                            map.fitBounds(bounds, { padding: [50, 50] });
+                        } else {
+                            const allBounds = routeLayers
+                                .filter(layer => layer instanceof L.Polyline)
+                                .map(layer => layer.getBounds());
+                            if (allBounds.length > 0) {
+                                const combinedBounds = allBounds.reduce((bounds, b) => bounds.extend(b));
+                                map.fitBounds(combinedBounds, { padding: [50, 50] });
+                            }
+                        }
+                    } else {
+                        // OSRM yoksa düz çizgi çiz
+                        const fallbackLine = L.polyline([[startLat, startLon], [endLat, endLon]], {
+                            color: '#6c757d',
+                            weight: 3,
+                            opacity: 0.5,
+                            dashArray: '5, 5'
+                        }).addTo(map);
+                        routeLayers.push(fallbackLine);
+                    }
+                } catch (error) {
+                    console.error('Rota çizme hatası:', error);
+                    // Hata durumunda düz çizgi çiz
+                    const fallbackLine = L.polyline([[startLat, startLon], [endLat, endLon]], {
+                        color: '#6c757d',
+                        weight: 3,
+                        opacity: 0.5,
+                        dashArray: '5, 5'
+                    }).addTo(map);
+                    routeLayers.push(fallbackLine);
+                }
+            }
+        }
+
+        // Mağaza marker'larını çiz
+        function drawStoreMarkers() {
+            // Önceki marker'ları temizle
+            storeMarkers.forEach(marker => map.removeLayer(marker));
+            storeMarkers = [];
+
+            storeLocationData.forEach(store => {
+                const lat = parseFloat(store.Enlem || store.enlem || store.ENLEM);
+                const lon = parseFloat(store.Boylam || store.boylam || store.BOYLAM);
+                const personel = store.Personel || store.personel || store.PERSONEL || 'Bilinmiyor';
+
+                if (isNaN(lat) || isNaN(lon)) {
+                    console.warn('Geçersiz mağaza koordinatı:', store);
+                    return;
+                }
+
+                const marker = L.marker([lat, lon], {
+                    icon: L.divIcon({
+                        className: 'store-marker',
+                        html: '<div style="background-color: #ffc107; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                        iconSize: [16, 16]
+                    })
+                }).addTo(map);
+
+                marker.bindPopup(`<b>Personel:</b> ${personel}<br><b>Konum:</b> ${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+                storeMarkers.push(marker);
+            });
+
+            // Marker'lara göre haritayı ayarla
+            if (storeMarkers.length > 0) {
+                const group = new L.featureGroup(storeMarkers);
+                map.fitBounds(group.getBounds(), { padding: [50, 50] });
+            }
+        }
+
+        // Rotaları temizle
+        function clearRoutes() {
+            routeLayers.forEach(layer => map.removeLayer(layer));
+            routeLayers = [];
+        }
+
+        // Tümünü temizle
+        function clearAllRoutes() {
+            clearRoutes();
+            storeMarkers.forEach(marker => map.removeLayer(marker));
+            storeMarkers = [];
+            contactReportData = [];
+            storeLocationData = [];
+            updateContactReportStatus(false, 0);
+            updateStoreLocationStatus(false, 0);
+            document.getElementById('driverFilter').innerHTML = '<option value="all">Tümü</option>';
+            document.getElementById('contactReportFile').value = '';
+            document.getElementById('storeLocationFile').value = '';
+        }
+
+        // Durum güncellemeleri
+        function updateContactReportStatus(loaded, count) {
+            const statusDiv = document.getElementById('contactReportStatus');
+            if (loaded) {
+                statusDiv.innerHTML = `<span class="status-badge status-loaded">Yüklendi (${count} kayıt)</span>`;
+            } else {
+                statusDiv.innerHTML = `<span class="status-badge status-empty">Yüklenmedi</span>`;
+            }
+        }
+
+        function updateStoreLocationStatus(loaded, count) {
+            const statusDiv = document.getElementById('storeLocationStatus');
+            if (loaded) {
+                statusDiv.innerHTML = `<span class="status-badge status-loaded">Yüklendi (${count} mağaza)</span>`;
+            } else {
+                statusDiv.innerHTML = `<span class="status-badge status-empty">Yüklenmedi</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
