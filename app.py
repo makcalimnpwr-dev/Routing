@@ -99,7 +99,8 @@ class LojistikPlanlayici:
     def get_distance_duration(self, c1, c2):
         try:
             url = f"{self.osrm_url}{c1[1]},{c1[0]};{c2[1]},{c2[0]}?overview=false"
-            r = requests.get(url, timeout=0.5).json()
+            # Render veya Public sunucu yavaş olabilir, timeout süresini artırıyoruz (0.5 -> 5.0 sn)
+            r = requests.get(url, timeout=5.0).json()
             if r['code'] == 'Ok':
                 return r['routes'][0]['distance']/1000, r['routes'][0]['duration']/60
         except: pass
