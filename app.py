@@ -81,7 +81,18 @@ def shutdown():
 class LojistikPlanlayici:
     def __init__(self, osrm_url=None):
         if osrm_url is None:
-            osrm_url = os.environ.get('OSRM_URL', "http://localhost:5000/route/v1/driving/")
+            # 1. Ortam değişkeninden al (En yüksek öncelik)
+            osrm_url = os.environ.get('OSRM_URL')
+            
+            # 2. Eğer Render ortamındaysak ve URL belirtilmemişse, public demo sunucusunu kullan
+            if not osrm_url and os.environ.get('RENDER'):
+                osrm_url = "http://router.project-osrm.org/route/v1/driving/"
+                print("Render ortamı algılandı: Public OSRM sunucusu kullanılıyor.")
+            
+            # 3. Hiçbiri yoksa yerel Docker sunucusunu varsayılan yap
+            if not osrm_url:
+                osrm_url = "http://localhost:5000/route/v1/driving/"
+                
         self.osrm_url = osrm_url
         self.max_daily_minutes = 450  # 7.5 Saat (Rota optimizasyon sistemi ile aynı)
         
