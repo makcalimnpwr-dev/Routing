@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Lojistik Planlayıcı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-dark: #cc0000;
+            --accent-color: #ff3333;
+            --text-color: #ffffff;
+            --text-secondary: #b3b3b3;
+            --bg-dark: #050505;
+            --bg-panel: #111111;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+        }
+
+        /* Left Side - Info Panel */
+        .info-side {
+            flex: 1;
+            background: #000000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Canvas for AI Animation */
+        #ai-network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .brand {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 50px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 20px;
+            position: relative;
+            z-index: 2;
+            background: rgba(0,0,0,0.5); /* Okunabilirlik için */
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.1rem;
+            background: rgba(20, 20, 20, 0.6);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--primary-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 0, 0, 0.05);
+            border-color: var(--primary-color);
+            transform: translateX(10px);
+        }
+
+        .feature-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 0, 0, 0.1);
+            color: var(--primary-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        /* Right Side - Login Form */
+        .login-side {
+            flex: 1;
+            background: var(--bg-panel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            border-left: 1px solid #222;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid #222;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 45px;
+            color: #666;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 15px 14px 50px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            background-color: #0a0a0a;
+            color: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            background-color: #000;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+        }
+
+        .form-control:focus + .input-icon {
+            color: var(--primary-color);
+        }
+
+        .form-control::placeholder {
+            color: #444;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #cc0000, #ff0000);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Rajdhani', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #444;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .brand { font-size: 2.5rem; }
+            .description { font-size: 1rem; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow-y: auto;
+            }
+            .info-side {
+                padding: 40px 20px;
+                min-height: 400px;
+            }
+            .login-side {
+                padding: 40px 20px;
+                min-height: 500px;
+            }
+            .login-container {
+                max-width: 100%;
+                box-shadow: none;
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
+            #ai-network {
+                display: none; /* Mobilde performansı artırmak için gizlenebilir */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Side: Project Info -->
+    <div class="info-side">
+        <canvas id="ai-network"></canvas>
+        
+        <div class="brand">
+            <i class="fas fa-brain"></i>
+            Yapay Zeka Lojistik
+        </div>
+        <p class="description">
+            Sinir ağları tabanlı rota optimizasyonu ve öngörücü veri analitiği ile operasyonlarınızı geleceğe taşıyın.
+        </p>
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+                <span>AI Destekli Rota Planlama</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <span>Güvenli Veri Altyapısı</span>
+            </div>
+             <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Akıllı Analitik Raporlama</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="login-side">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>SİSTEM GİRİŞİ</h2>
+                <p>Yetkili personel erişim paneli</p>
+            </div>
+
+            {% if error %}
+            <div class="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="post" action="/login">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" name="username" class="form-control" placeholder="Kullanıcı adınızı giriniz" required autofocus>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    OTURUM AÇ <i class="fas fa-chevron-right" style="margin-left: 10px; font-size: 0.9em;"></i>
+                </button>
+            </form>
+
+            <div class="footer-text">
+                <p>&copy; 2026 Lojistik Planlayıcı Sistemleri</p>
+                <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Created By M.Akcali</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('ai-network');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        // Ayarlar
+        const particleCount = 70;
+        const connectionDistance = 150;
+        const mouseDistance = 200;
+
+        function resize() {
+            width = canvas.width = document.querySelector('.info-side').offsetWidth;
+            height = canvas.height = document.querySelector('.info-side').offsetHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff0000';
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 0, 0, ${1 - distance / connectionDistance})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

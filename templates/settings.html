@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ayarlar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #f8f9fa; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #fff; box-shadow: 0 1px 5px rgba(0,0,0,0.1); }
+        .container { max-width: 900px; margin: 24px auto; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); padding: 20px; }
+        .section-title { font-weight: bold; margin-bottom: 12px; }
+        .row { display: flex; gap: 16px; }
+        .col { flex: 1; }
+        .input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; }
+        .btn { padding: 10px 14px; border: none; border-radius: 8px; background: #007bff; color: white; cursor: pointer; }
+        .btn-secondary { background: #6c757d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; background: #e9ecef; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div><i class="fas fa-cog"></i> Ayarlar</div>
+        <div>
+            <a class="btn btn-secondary" href="/"><i class="fas fa-arrow-left"></i> Ana Sayfa</a>
+            <a class="btn btn-secondary" href="/logout"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Profil Güncelleme Bölümü -->
+        <div class="section-title">Profilim</div>
+        <div class="row">
+            <div class="col">
+                <input class="input" type="text" id="selfUsername" placeholder="Yeni Kullanıcı Adı" value="{{ session['user']['username'] }}">
+                <input class="input" type="password" id="selfPassword" placeholder="Yeni Şifre">
+                <button class="btn" onclick="updateSelf()">Bilgilerimi Güncelle</button>
+            </div>
+        </div>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+        <!-- Kullanıcı Yönetimi (Sadece Admin) -->
+        {% if session['user']['role'] == 'admin' %}
+        <div class="section-title">Kullanıcı Yönetimi</div>
+        <div class="row">
+            <div class="col">
+                <form method="post" action="/settings/users/add">
+                    <input class="input" type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <input class="input" type="password" name="password" placeholder="Şifre" required>
+                    <select class="input" name="role">
+                        <option value="user">Kullanıcı</option>
+                        <option value="admin">Yönetici</option>
+                    </select>
+                    <button class="btn" type="submit"><i class="fas fa-plus"></i> Kullanıcı Ekle</button>
+                </form>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr><th>Kullanıcı Adı</th><th>Rol</th><th>İşlem</th></tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td><span class="badge">{{ u.role }}</span></td>
+                    <td>
+                        <form method="post" action="/settings/users/delete" style="display:inline;">
+                            <input type="hidden" name="username" value="{{ u.username }}">
+                            <button class="btn btn-secondary" type="submit"><i class="fas fa-trash"></i> Sil</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <script>
+        function updateSelf() {
+            const username = document.getElementById('selfUsername').value;
+            const password = document.getElementById('selfPassword').value;
+
+            if (!username || !password) {
+                alert('Lütfen kullanıcı adı ve şifre giriniz.');
+                return;
+            }
+
+            fetch('/api/update_self', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

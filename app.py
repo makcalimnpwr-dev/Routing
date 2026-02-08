@@ -8,7 +8,7 @@ import sys
 import tempfile
 import traceback
 import secrets
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 import webbrowser
 from threading import Timer
 from datetime import datetime, timedelta
@@ -19,6 +19,7 @@ from math import radians
 from sklearn.metrics.pairwise import haversine_distances
 from math import radians, sin, cos, sqrt, atan2
 import math
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def resource_path(relative_path):
     """ PyInstaller için dosya yolu bulucu """
@@ -37,9 +38,33 @@ app = Flask(__name__,
 # Büyük projelerde "413 Request Entity Too Large" hatasını önlemek için istek gövdesi limiti (100 MB)
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
+def get_osrm_url():
+    """OSRM URL'ini belirle (Env var > Render/Public > Localhost)"""
+    url = os.environ.get('OSRM_URL')
+    if not url:
+        # Render ortamı veya Public kullanım
+        if os.environ.get('RENDER') or os.environ.get('DYNO'):
+            url = "https://router.project-osrm.org/route/v1/driving/"
+        else:
+            url = "http://localhost:5000/route/v1/driving/"
+    
+    # URL validasyonu ve düzeltme
+    u = str(url).strip()
+    if not (u.startswith("http://") or u.startswith("https://")):
+        u = "https://" + u
+    if "route/v1/driving" not in u:
+        if not u.endswith("/"):
+            u += "/"
+        u += "route/v1/driving/"
+    else:
+        if not u.endswith("/"):
+            u += "/"
+    return u
+
 # EXE (PyInstaller) içinde tek instance UI kapanınca server'ı kapatmak için
 APP_INSTANCE_TOKEN = secrets.token_urlsafe(16)
 LAST_CLIENT_PING_TS = time.time()
+app.secret_key = APP_INSTANCE_TOKEN
 
 @app.context_processor
 def inject_runtime_flags():
@@ -47,6 +72,24 @@ def inject_runtime_flags():
         "shutdown_token": APP_INSTANCE_TOKEN,
         "is_frozen": bool(getattr(sys, "frozen", False)),
     }
+
+# --- Auth decorator'larını erken tanımla (route'larda kullanılmadan önce) ---
+def login_required(fn):
+    def wrapper(*args, **kwargs):
+        if not session.get('user'):
+            return redirect(url_for('login'))
+        return fn(*args, **kwargs)
+    wrapper.__name__ = fn.__name__
+    return wrapper
+
+def admin_required(fn):
+    def wrapper(*args, **kwargs):
+        user = session.get('user')
+        if not user or user.get('role') != 'admin':
+            return redirect(url_for('login'))
+        return fn(*args, **kwargs)
+    wrapper.__name__ = fn.__name__
+    return wrapper
 
 @app.route('/ping', methods=['POST'])
 def ping():
@@ -81,29 +124,17 @@ def shutdown():
 class LojistikPlanlayici:
     def __init__(self, osrm_url=None):
         if osrm_url is None:
-            osrm_url = os.environ.get('OSRM_URL')
-            if not osrm_url and os.environ.get('RENDER'):
-                osrm_url = "http://router.project-osrm.org/route/v1/driving/"
-            if not osrm_url:
-                osrm_url = "http://localhost:5000/route/v1/driving/"
-        u = str(osrm_url).strip()
-        if not (u.startswith("http://") or u.startswith("https://")):
-            u = "https://" + u
-        if "route/v1/driving" not in u:
-            if not u.endswith("/"):
-                u += "/"
-            u += "route/v1/driving/"
+            self.osrm_url = get_osrm_url()
         else:
-            if not u.endswith("/"):
-                u += "/"
-        self.osrm_url = u
+            self.osrm_url = osrm_url
+            
         self.max_daily_minutes = 450  # 7.5 Saat (Rota optimizasyon sistemi ile aynı)
         
     def get_distance_duration(self, c1, c2):
         try:
             url = f"{self.osrm_url}{c1[1]},{c1[0]};{c2[1]},{c2[0]}?overview=false"
             # Render veya Public sunucu yavaş olabilir, timeout süresini artırıyoruz (0.5 -> 5.0 sn)
-            r = requests.get(url, timeout=5.0).json()
+            r = requests.get(url, timeout=5.0, headers={"ngrok-skip-browser-warning": "true"}).json()
             if r['code'] == 'Ok':
                 return r['routes'][0]['distance']/1000, r['routes'][0]['duration']/60
         except: pass
@@ -293,11 +324,14 @@ class LojistikPlanlayici:
         return pd.DataFrame(final_rows)
 
 LAST_UPLOADED_FILE_PATH = None
-OSRM_API_BASE_URL = "http://localhost:5000/route/v1/driving/"
+OSRM_API_BASE_URL = get_osrm_url()
 
 class RotaOptimizasyonSistemi:
-    def __init__(self, osrm_url="http://localhost:5000/route/v1/driving/"):
-        self.osrm_url = osrm_url
+    def __init__(self, osrm_url=None):
+        if osrm_url is None:
+            self.osrm_url = get_osrm_url()
+        else:
+            self.osrm_url = osrm_url
         self.max_daily_minutes = 450
         
     def get_osrm_route_info(self, coord1, coord2):
@@ -733,6 +767,7 @@ def convert_to_serializable(obj):
         return str(obj)
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
     global LAST_UPLOADED_FILE_PATH
     store_data = []
@@ -860,12 +895,68 @@ def index():
             schedule_json = "{}"
             all_merch = []
         
-        return render_template('index.html', store_data=stores_json, initial_schedule=schedule_json, all_merch=all_merch)
+        return render_template('index.html', store_data=stores_json, initial_schedule=schedule_json, all_merch=all_merch, logged_in=bool(session.get('user')))
     
     except Exception as e:
         print(f"Index route genel hatası: {e}")
         print(traceback.format_exc())
         return render_template('index.html', error=f"Beklenmeyen bir hata oluştu: {str(e)}", store_data="[]", initial_schedule="{}", all_merch=[])
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = (request.form.get('username') or '').strip()
+        password = request.form.get('password') or ''
+        users = load_users()
+        for u in users:
+            if u.get('username') == username and check_password_hash(u.get('password_hash', ''), password):
+                session['user'] = {'username': username, 'role': u.get('role', 'user')}
+                return redirect(url_for('index'))
+        return render_template('login.html', error="Kullanıcı adı veya şifre hatalı")
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
+
+@app.route('/settings', methods=['GET'])
+@admin_required
+def settings():
+    users = load_users()
+    return render_template('settings.html', users=users, current_user=session.get('user'))
+
+@app.route('/settings/users/add', methods=['POST'])
+@admin_required
+def settings_users_add():
+    data = request.form
+    username = (data.get('username') or '').strip()
+    password = data.get('password') or ''
+    role = (data.get('role') or 'user').strip()
+    if not username or not password:
+        return redirect(url_for('settings'))
+    users = load_users()
+    if any(u.get('username') == username for u in users):
+        return redirect(url_for('settings'))
+    users.append({
+        'username': username,
+        'password_hash': generate_password_hash(password),
+        'role': role
+    })
+    save_users(users)
+    return redirect(url_for('settings'))
+
+@app.route('/settings/users/delete', methods=['POST'])
+@admin_required
+def settings_users_delete():
+    username = (request.form.get('username') or '').strip()
+    users = load_users()
+    users = [u for u in users if u.get('username') != username]
+    if not any(u.get('role') == 'admin' for u in users):
+        ensure_default_admin()
+    else:
+        save_users(users)
+    return redirect(url_for('settings'))
 
 @app.route('/get_route', methods=['POST'])
 def get_route():
@@ -1383,7 +1474,7 @@ def download_template():
 # YENİ: ROUTING SİSTEMİ ROUTE'LARI
 @app.route('/routing')
 def routing_index():
-    return render_template('routing.html')
+    return render_template('routing.html', osrm_url=get_osrm_url())
 
 @app.route('/routing/download-template')
 def routing_download_template():
@@ -1562,10 +1653,10 @@ def check_connection():
                 u += '/'
         return u
     
-    # Eğer port girilmediyse varsayılan 5000'i dene, girildiyse o portu ayarla
+    # Eğer port girilmediyse varsayılanı kullan (env veya localhost)
     target_url = ""
     if not port:
-        target_url = "http://localhost:5000/route/v1/driving/"
+        target_url = get_osrm_url()
     else:
         # Eğer tam url girildiyse onu al, sadece port girildiyse localhost ile birleştir
         if port.startswith("http"):
@@ -1576,7 +1667,7 @@ def check_connection():
     # Test isteği gönder (İstanbul merkezli rastgele kısa bir rota)
     test_coords = "28.9784,41.0082;28.9800,41.0100"
     try:
-        response = requests.get(f"{target_url}{test_coords}", timeout=5)
+        response = requests.get(f"{target_url}{test_coords}", timeout=5, headers={"ngrok-skip-browser-warning": "true"})
         if response.status_code == 200:
             OSRM_API_BASE_URL = target_url
             return jsonify({'status': 'success', 'url': target_url, 'message': 'Bağlantı Başarılı'})
@@ -1588,7 +1679,7 @@ def check_connection():
 # YENİ: PERSONEL TAKİP SİSTEMİ ROUTE'LARI
 @app.route('/personel_takip')
 def personel_takip_index():
-    return render_template('personel_takip.html')
+    return render_template('personel_takip.html', osrm_url=get_osrm_url())
 
 @app.route('/personel_takip/upload_contact_report', methods=['POST'])
 def upload_contact_report():
@@ -1748,6 +1839,92 @@ def upload_store_locations():
 PROJECTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'saved_projects')
 if not os.path.exists(PROJECTS_DIR):
     os.makedirs(PROJECTS_DIR)
+USERS_FILE = os.path.join(PROJECTS_DIR, 'users.json')
+
+def load_users():
+    try:
+        if os.path.exists(USERS_FILE):
+            with open(USERS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return []
+
+def save_users(users):
+    try:
+        with open(USERS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(users, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+
+def ensure_default_admin():
+    users = load_users()
+    has_admin = any(u.get('role') == 'admin' for u in users)
+    if not has_admin:
+        admin_user = os.environ.get('ADMIN_USER', 'admin')
+        admin_pass = os.environ.get('ADMIN_PASS', 'admin12345')
+        users.append({
+            'username': admin_user,
+            'password_hash': generate_password_hash(admin_pass),
+            'role': 'admin'
+        })
+        save_users(users)
+
+ensure_default_admin()
+
+@app.route('/api/update_self', methods=['POST'])
+def update_self():
+    if not session.get('user'):
+        return jsonify({'status': 'error', 'message': 'Yetkisiz erişim'})
+    
+    current_username = session['user']['username']
+    data = request.get_json()
+    new_username = data.get('username')
+    new_password = data.get('password')
+    
+    if not new_username or not new_password:
+        return jsonify({'status': 'error', 'message': 'Kullanıcı adı ve şifre zorunludur'})
+    
+    users = load_users()
+    
+    # Kullanıcıyı bul
+    current_user_obj = next((u for u in users if u['username'] == current_username), None)
+    
+    if not current_user_obj:
+        return jsonify({'status': 'error', 'message': 'Kullanıcı bulunamadı'})
+        
+    # Eğer kullanıcı adı değişiyorsa ve yeni ad zaten başkasında varsa hata ver
+    if new_username != current_username:
+        if any(u['username'] == new_username for u in users):
+             return jsonify({'status': 'error', 'message': 'Bu kullanıcı adı zaten kullanılıyor'})
+    
+    # Güncelle
+    current_user_obj['username'] = new_username
+    current_user_obj['password_hash'] = generate_password_hash(new_password)
+    save_users(users)
+    
+    # Session güncelle
+    session['user']['username'] = new_username
+    session.modified = True
+    
+    return jsonify({'status': 'success', 'message': 'Bilgileriniz başarıyla güncellendi'})
+
+def login_required(fn):
+    def wrapper(*args, **kwargs):
+        if not session.get('user'):
+            return redirect(url_for('login'))
+        return fn(*args, **kwargs)
+    wrapper.__name__ = fn.__name__
+    return wrapper
+
+def admin_required(fn):
+    def wrapper(*args, **kwargs):
+        user = session.get('user')
+        if not user or user.get('role') != 'admin':
+            return redirect(url_for('login'))
+        return fn(*args, **kwargs)
+    wrapper.__name__ = fn.__name__
+    return wrapper
 
 @app.route('/api/save_project', methods=['POST'])
 def save_project():

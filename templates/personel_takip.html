@@ -120,6 +120,9 @@
             color: white;
         }
     </style>
+    <script>
+        const OSRM_URL = "{{ osrm_url }}";
+    </script>
 </head>
 <body>
     <div class="header-section">
@@ -348,7 +351,7 @@
 
                 try {
                     // OSRM ile rota hesapla
-                    const response = await fetch(`http://localhost:5000/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?overview=full&geometries=geojson`);
+                    const response = await fetch(`${OSRM_URL}${startLon},${startLat};${endLon},${endLat}?overview=full&geometries=geojson`);
                     const data = await response.json();
 
                     if (data.code === 'Ok' && data.routes && data.routes.length > 0) {

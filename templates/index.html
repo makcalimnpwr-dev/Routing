@@ -9,23 +9,201 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
+        :root {
+            --primary-color: #dc2626; /* Deep Red (Red-600) */
+            --primary-dark: #991b1b; /* Red-800 */
+            --accent-color: #ef4444; /* Red-500 */
+            --text-color: #1e293b; /* Slate-800 (Dark Gray Text) */
+            --text-secondary: #64748b; /* Slate-500 */
+            --bg-dark: #f1f5f9; /* Slate-100 (Very Light Gray Background) */
+            --bg-panel: #ffffff; /* Pure White Panels */
+            --border-color: #e2e8f0; /* Slate-200 (Light Borders) */
+            --input-bg: #ffffff; /* White Input */
+            --input-border: #cbd5e1; /* Slate-300 */
+        }
+
+        /* Sidebar Button Theme Class */
+        .btn-sidebar {
+            width: 100%;
+            padding: 12px;
+            background-color: #f1f5f9; /* Slate-100 (Solid Light Gray) */
+            color: #0f172a; /* Slate-900 (Very Dark Text) */
+            border: 1px solid #cbd5e1; /* Slate-300 (Visible Border) */
+            border-radius: 6px; /* Slightly tighter radius for professional look */
+            cursor: pointer;
+            font-weight: 700; /* Bold text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            text-decoration: none; /* For a tags */
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); /* Clear shadow */
+            font-size: 13px;
+        }
+
+        .btn-sidebar:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* Specific Button Overrides for Theme - Harmonized */
+        #savePlanBtn, #saveProjectBtn, #saveSingleStoreBtn, #confirmSaveProjectBtn, 
+        #openAutoRouteModalBtn, #serverSettingsBtn, #addStoreBtn, #downloadFullPlanBtn,
+        #fixDayStoresBtn, #autoSortAllDaysBtn, #projectsMenuBtn {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+            border-radius: 6px !important;
+            font-weight: 700 !important;
+        }
+        
+        #savePlanBtn:hover, #saveProjectBtn:hover, #saveSingleStoreBtn:hover, #confirmSaveProjectBtn:hover,
+        #openAutoRouteModalBtn:hover, #serverSettingsBtn:hover, #addStoreBtn:hover, #downloadFullPlanBtn:hover,
+        #fixDayStoresBtn:hover, #autoSortAllDaysBtn:hover, #projectsMenuBtn:hover {
+            background-color: #ffffff !important;
+            color: #dc2626 !important; /* Red-600 */
+            border-color: #dc2626 !important; /* Red-600 */
+            box-shadow: 0 4px 8px -2px rgba(220, 38, 38, 0.2) !important;
+        }
+
+        /* Primary Actions - Stand Out */
+        #openAutoRouteModalBtn, #serverSettingsBtn {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3) !important;
+        }
+        
+        #openAutoRouteModalBtn:hover, #serverSettingsBtn:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4) !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        #clearPlanBtn, #bulkDeleteSpecificDateBtn, .delete-store-btn, .clear-map-state-btn, #logoutBtn {
+            background-color: #ffffff !important;
+            border: 1px solid #fee2e2 !important; /* Red-100 */
+            color: #ef4444 !important; /* Red-500 */
+            border-radius: 8px !important;
+        }
+        #clearPlanBtn:hover, #bulkDeleteSpecificDateBtn:hover, .delete-store-btn:hover, .clear-map-state-btn:hover, #logoutBtn:hover {
+            background-color: #fef2f2 !important; /* Red-50 */
+            border-color: #ef4444 !important;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2) !important;
+        }
+
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             display: flex;
             height: 100vh;
             margin: 0;
             flex-direction: row;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
         }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Form Elements Styling */
+        input, select, textarea {
+            background-color: var(--input-bg) !important;
+            border: 1px solid var(--input-border) !important;
+            color: var(--text-color) !important;
+            border-radius: 4px;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+        }
+
+        /* Button Styling Update */
+        button {
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        /* OLD Button Overrides Removed - Handled by Theme Classes above */
+
+        .section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .schedule-list-container {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+        }
+        
+        .schedule-item {
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .schedule-item:hover {
+            background-color: #2a0a0a; /* Dark Red Hover */
+        }
+
+        /* Header/Filter Bars */
+        #top-controls #filter-bar, #top-controls #summary-bar {
+            background-color: rgba(255, 255, 255, 0.95); /* White with opacity */
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .close-modal {
+            color: var(--text-secondary);
+        }
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
 
         #sidebar {
             width: 350px;
             padding: 15px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
         }
 
         #main-content {
@@ -43,12 +221,13 @@
         #right-sidebar {
             width: 400px;
             padding: 15px;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            background-color: #f8f9fa;
+            background-color: var(--bg-panel);
             height: 100vh;
+            border-left: 1px solid var(--border-color);
         }
 
         #top-controls {
@@ -61,32 +240,50 @@
             justify-content: space-between;
             align-items: flex-start;
         }
+        #account-controls {
+            display: none;
+        }
+        #account-controls a, #account-controls span {
+            background-color: #ffffff; /* White */
+            padding: 8px 12px;
+            border-radius: 6px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+            text-decoration: none;
+            color: var(--text-color);
+            margin-left: 8px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+        }
 
         #filter-bar {
             background-color: rgba(255, 255, 255, 0.95);
             padding: 10px 15px;
             border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Lighter shadow */
             display: flex;
             gap: 20px;
             align-items: center;
             flex-wrap: wrap;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
         }
 
         #summary-bar {
             background-color: rgba(255, 255, 255, 0.95);
             padding: 10px 15px;
             border-radius: 5px;
+            backdrop-filter: blur(8px);
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
             font-size: 13px;
             width: 300px;
+            border: 1px solid var(--border-color);
         }
 
         .summary-item {
             margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 5px;
         }
 
@@ -96,7 +293,7 @@
 
         .summary-item span {
             font-weight: bold;
-            color: #0056b3;
+            color: var(--accent-color);
         }
 
         .filter-item {
@@ -119,9 +316,9 @@
             flex-grow: 1;
             overflow-y: auto;
             margin-top: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 5px;
-            background-color: white;
+            background-color: var(--bg-panel);
             padding: 10px;
         }
 
@@ -131,9 +328,10 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 8px 8px 20px;
-            border-bottom: 1px solid #eee;
-            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-panel);
             cursor: pointer;
+            color: var(--text-color);
         }
 
         .date-group-header {
@@ -141,22 +339,23 @@
             padding: 10px 8px;
             color: white;
             font-weight: bold;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid var(--border-color);
             margin-top: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             border-radius: 5px;
+            background-color: #2a0a0a; /* Dark Red Header */
         }
 
         .empty-date-group-header {
-            background-color: #6c757d !important;
+            background-color: #333 !important;
             font-size: 14px;
             padding: 10px 8px;
-            color: white;
+            color: #aaa;
             font-weight: bold;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 1px solid var(--border-color);
             margin-top: 10px;
             display: flex;
             justify-content: space-between;
@@ -384,26 +583,38 @@
         #toggleStoreNamesBtn {
             width: 100%;
             padding: 10px;
-            background-color: #17a2b8;
-            color: white;
-            border: none;
+            background-color: #2b0a0a; /* Dark Red */
+            color: #e0e0e0;
+            border: 1px solid #8b0000;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        #toggleStoreNamesBtn:hover {
+            background-color: #8b0000;
+            color: white;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
         }
 
         /* YENİ: Frekansları göster butonu */
         #toggleFrequencyBtn {
             width: 100%;
             padding: 10px;
-            background-color: #6f42c1;
-            color: white;
-            border: none;
+            background-color: #2b0a0a; /* Dark Red */
+            color: #e0e0e0;
+            border: 1px solid #8b0000;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        #toggleFrequencyBtn:hover {
+            background-color: #8b0000;
+            color: white;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
         }
 
         .bulk-assign-controls,
@@ -997,23 +1208,20 @@
 <body>
     <div id="sidebar">
         <div class="section">
-            <button id="openAutoRouteModalBtn"
-                style="width: 100%; padding: 10px; background-color: #6f42c1; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button id="openAutoRouteModalBtn" class="btn-sidebar">
                 <i class="fas fa-magic"></i> Otomatik Rotala & Planla
             </button>
         </div>
 
         <div class="section">
-            <button id="serverSettingsBtn"
-                style="width: 100%; padding: 10px; background-color: #343a40; color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <button id="serverSettingsBtn" class="btn-sidebar">
                 <i class="fas fa-server"></i> Server Ayarları
                 <div id="sidebarStatusLight" class="status-indicator"></div>
             </button>
         </div>
 
         <div class="section">
-            <a href="/personel_takip"
-                style="width: 100%; padding: 10px; background-color: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-weight: bold;">
+            <a href="/personel_takip" class="btn-sidebar">
                 <i class="fas fa-user-check"></i> Personel Takip
             </a>
         </div>
@@ -1022,14 +1230,12 @@
         <div class="section">
             <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">Proje Yönetimi</h3>
 
-            <button id="saveProjectBtn"
-                style="width: 100%; padding: 8px; margin-bottom: 8px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+            <button id="saveProjectBtn" class="btn-sidebar" style="padding: 8px; margin-bottom: 8px; font-size: 13px;">
                 <i class="fas fa-save"></i> Proje Kaydet
             </button>
 
             <div style="position: relative;">
-                <button id="projectsMenuBtn"
-                    style="width: 100%; padding: 8px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: space-between;">
+                <button id="projectsMenuBtn" class="btn-sidebar" style="padding: 8px; font-size: 13px; justify-content: space-between;">
                     <span><i class="fas fa-folder-open"></i> Projeler</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
@@ -1047,32 +1253,28 @@
         </div>
 
         <div class="section" style="padding-bottom: 10px; text-align: center;"><a href="/download_template"
-                style="text-decoration: none; font-weight: bold; color: #28a745;">&raquo; Kalıbı İndir &laquo;</a></div>
+                style="text-decoration: none; font-weight: bold; color: var(--accent-color);">&raquo; Kalıbı İndir &laquo;</a></div>
 
         <div class="section">
-            <button id="addStoreBtn">Mağaza Ekle</button>
+            <button id="addStoreBtn" class="btn-sidebar">Mağaza Ekle</button>
         </div>
 
         <div class="section save-load-controls">
-            <button id="savePlanBtn">Çalışmayı Kaydet</button>
-            <button id="clearPlanBtn">Kaydı Temizle</button>
+            <button id="savePlanBtn" class="btn-sidebar">Çalışmayı Kaydet</button>
+            <button id="clearPlanBtn" class="btn-sidebar">Kaydı Temizle</button>
         </div>
 
         <div class="section">
-            <button id="downloadFullPlanBtn"
-                style="width: 100%; padding: 10px; font-size: 14px; background-color: #0d6efd; color: white;">Tam Planı
-                İndir</button>
+            <button id="downloadFullPlanBtn" class="btn-sidebar" style="font-size: 14px;">Tam Planı İndir</button>
         </div>
         <div class="section">
-            <button id="fixDayStoresBtn"
-                style="width: 100%; padding: 10px; font-size: 14px; background-color: #fd7e14; color: white; font-weight: bold;">Günlerdeki
-                Noktaları Sabitle</button>
+            <button id="fixDayStoresBtn" class="btn-sidebar" style="font-size: 14px;">Günlerdeki Noktaları Sabitle</button>
             <small style="color: #666; display: block; margin-top: 5px;">Sapan mağazaları düzeltir ve en yakın
                 mağazaları gruplar</small>
         </div>
         <div class="section">
             <div class="excel-upload-card">
-                <div class="excel-upload-title">Excel Yükleyin</div>
+                <div class="excel-upload-title" style="color: var(--text-color);">Excel Yükleyin</div>
                 <form id="mainExcelUploadForm" method="post" enctype="multipart/form-data">
                     <input type="file" id="mainExcelFileInput" name="file" accept=".xlsx, .xls" style="display:none;">
                     <div class="excel-upload-row">
@@ -1086,7 +1288,7 @@
         </div>
 
         <div class="section">
-            <button id="autoSortAllDaysBtn">Tüm Günleri Otomatik Sırala</button>
+            <button id="autoSortAllDaysBtn" class="btn-sidebar">Tüm Günleri Otomatik Sırala</button>
             <div id="sortProgressInfo" class="progress-info" style="display: none;">
                 <div>İşlem devam ediyor...</div>
                 <div id="sortProgressText">Hazırlanıyor</div>
@@ -1110,18 +1312,17 @@
                 <select id="bulkMerchInput">
                     <option value="">Personel Seçiniz</option>
                 </select>
-                <button id="bulkAssignBtn">Seçilenlere Ata</button>
+                <button id="bulkAssignBtn" class="btn-sidebar" style="margin-bottom: 5px;">Seçilenlere Ata</button>
 
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ddd;">
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
                 <label style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px;">Belirli Gün
                     Sil:</label>
                 <select id="bulkDeleteDateSelect">
                     <option value="">Seçim Yapılmadı</option>
                 </select>
-                <button id="bulkDeleteSpecificDateBtn" style="background-color: #dc3545; color: white;">Seçili Günü
-                    Sil</button>
+                <button id="bulkDeleteSpecificDateBtn" class="btn-sidebar" style="background-color: #4a0000; border-color: #ff3333;">Seçili Günü Sil</button>
 
-                <button id="bulkClearDatesBtn" style="background-color: #ffc107; margin-top: 5px;">Seçilenlerin TÜM
+                <button id="bulkClearDatesBtn" class="btn-sidebar" style="background-color: #856404; border-color: #ffc107; margin-top: 5px; color: white;">Seçilenlerin TÜM
                     Günlerini Temizle</button>
                 <small>
                     <p id="selectedCount">0 mağaza seçildi.</p>
@@ -1144,9 +1345,25 @@
             </small>
         </div>
 
+        <!-- Ayarlar ve Çıkış Butonları (Sidebar Altına Taşındı) -->
+        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; justify-content: center;">
+            <button onclick="window.location.href='/settings'" title="Ayarlar" class="btn-sidebar" style="justify-content: center; background: var(--input-bg);">
+                <i class="fas fa-cog"></i> Ayarlar
+            </button>
+            <button onclick="window.location.href='/logout'" title="Çıkış" class="btn-sidebar" style="justify-content: center; background: #4d1a1a; border-color: var(--primary-color);">
+                <i class="fas fa-sign-out-alt"></i> Çıkış
+            </button>
+        </div>
+
     </div>
 
     <div id="main-content">
+        {% if logged_in %}
+        <div id="account-controls">
+            <a href="/settings"><i class="fas fa-cog"></i> Ayarlar</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Çıkış</a>
+        </div>
+        {% endif %}
         <div id="map"></div>
 
         <div id="top-controls">
@@ -1225,6 +1442,8 @@
         <div class="schedule-list-container" id="schedule-list">
             <p>Henüz atama yapılmadı.</p>
         </div>
+
+
     </div>
 
     <div id="addStoreModal" class="modal">
@@ -1305,6 +1524,9 @@
     <!-- YENİ: Template verilerini JS'den ayır (linter ve bakım için) -->
     <script type="application/json" id="stores-data">{{ store_data | safe }}</script>
     <script type="application/json" id="schedule-data">{{ initial_schedule | safe }}</script>
+    <!-- Sol Alt Köşe Ayarlar Butonu - TAŞINDI -->
+
+
     <script type="application/json" id="all-merch-data">{{ all_merch | tojson | safe }}</script>
     <script type="application/json" id="is-frozen-data">{{ is_frozen | tojson | safe }}</script>
 
@@ -1407,6 +1629,14 @@
                 mainExcelInput.addEventListener('change', () => {
                     const f = mainExcelInput.files?.[0];
                     mainExcelName.textContent = f ? f.name : 'Dosya seçilmedi';
+                });
+            }
+
+            // YENİ: Dosya yüklendiğinde flag set et (Bildirim kontrolü için)
+            const mainExcelForm = document.getElementById('mainExcelUploadForm');
+            if (mainExcelForm) {
+                mainExcelForm.addEventListener('submit', () => {
+                    localStorage.setItem('fileUploaded', 'true');
                 });
             }
 
@@ -2800,6 +3030,14 @@
             if (document.getElementById('toggleFrequencyBtn')) {
                 document.getElementById('toggleFrequencyBtn').addEventListener('click', toggleFrequencies);
             }
+            
+            // YENİ: Dosya yükleme formunu dinle ve prompt bayrağını temizle
+            const uploadForm = document.getElementById('mainExcelUploadForm');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', function() {
+                    sessionStorage.removeItem('promptShown');
+                });
+            }
         }
 
         // HARİTA VE DİĞER KODLAR
@@ -3057,13 +3295,12 @@
 
         // Mağazalar yüklendiğinde veya kayıtlı veri varsa çalıştır
         if ((stores && stores.length > 0) || (localStorage.getItem('savedStores') && localStorage.getItem('savedStores') !== '[]')) {
-            // Eğer stores boşsa ama kayıtlı veri varsa, yüklemeyi dene
-            if ((!stores || stores.length === 0) && localStorage.getItem('savedStores')) {
-                // loadPlanFromStorage false dönerse (kullanıcı hayır derse), stores boş kalır
+            
+            // YENİ: Sadece dosya yüklendiğinde sor (Kullanıcı isteği)
+            const fileUploaded = localStorage.getItem('fileUploaded');
+            if (fileUploaded === 'true') {
                 loadPlanFromStorage();
-            } else {
-                // Normal yükleme (stores doluysa)
-                loadPlanFromStorage();
+                localStorage.removeItem('fileUploaded');
             }
             
             // Stores yüklendiyse filtreleri doldur
