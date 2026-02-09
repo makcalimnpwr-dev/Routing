@@ -5450,23 +5450,15 @@
             form.enctype = "multipart/form-data"; // Veri boyutunu optimize et
             // Proje yüklüyse ve filtre yoksa proje adı + notlar gönder (413 önlenir; notlar her zaman güncel açıklama için gider)
             const useProjectFile = currentProjectName && !isAnyFilterActive;
-            // YENİ: Veri boyutu optimizasyonu
-            let storesDataJson = '';
+            // YENİ: Veri boyutu optimizasyonu (Sadece ID listesi gönder)
+            // Eğer proje yüklü değilse, sunucudaki LAST_UPLOADED_FILE_PATH kullanılır.
+            // Filtreleme yapılmışsa, sunucu tarafında filtrelemek için sadece mağaza isimlerini gönderiyoruz.
+            let storeNamesJson = '';
+            
             if (!useProjectFile) {
-                if (!isAnyFilterActive) {
-                    // Filtre yoksa, veri boyutunu kontrol et
-                    const tempJson = JSON.stringify(storesToSend);
-                    // 10MB üzeri ise gönderme (Sunucudaki dosyayı kullan)
-                    if (tempJson.length > 10 * 1024 * 1024) {
-                        console.log("Veri boyutu büyük (" + (tempJson.length / 1024 / 1024).toFixed(2) + " MB), sunucudaki dosya kullanılacak.");
-                        storesDataJson = ''; // Boş gönder, sunucu dosya kullanacak
-                    } else {
-                        storesDataJson = tempJson;
-                    }
-                } else {
-                    // Filtre varsa gönderilmeli
-                    storesDataJson = JSON.stringify(storesToSend);
-                }
+                 // Filtreli veya filtresiz, sadece mağaza isimlerini gönder (Çok daha az veri)
+                 const storeNames = storesToSend.map(s => s['Mağaza İsmi']);
+                 storeNamesJson = JSON.stringify(storeNames);
             }
 
             const formData = useProjectFile
@@ -5482,7 +5474,7 @@
                     'notes_data': JSON.stringify(storeNotesToSend),
                     'edited_stores_data': JSON.stringify(editedStoresToSend),
                     'new_stores_data': JSON.stringify(newStoresToSend),
-                    'stores_data': storesDataJson
+                    'store_names_data': storeNamesJson // Tüm veri yerine sadece isim listesi
                 };
             for (const key in formData) {
                 const input = document.createElement("input");

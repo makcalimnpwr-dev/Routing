@@ -1159,6 +1159,7 @@ def download():
         try:
             # YENİ: Önce frontend'den gelen stores_data'yı kullanmayı dene
             stores_data_json = request.form.get('stores_data', None)
+            store_names_json = request.form.get('store_names_data', None)
             
             if stores_data_json:
                 # Frontend'den gelen mağaza verileri varsa bunları kullan
@@ -1166,7 +1167,17 @@ def download():
                 base_df = pd.DataFrame(stores_list)
             elif LAST_UPLOADED_FILE_PATH and os.path.exists(LAST_UPLOADED_FILE_PATH):
                 # Fallback: Eğer stores_data yoksa, eski yöntemi kullan
+                # Ancak kullanıcı filtreleme yapmış olabilir, bu yüzden store_names_data'yı kontrol et
                 base_df = pd.read_csv(LAST_UPLOADED_FILE_PATH, dtype=str, encoding='utf-8')
+                
+                if store_names_json:
+                    try:
+                        target_names = json.loads(store_names_json)
+                        if target_names:
+                            # Sadece bu isimdeki mağazaları filtrele
+                            base_df = base_df[base_df['Mağaza İsmi'].isin(target_names)]
+                    except Exception as e:
+                        print(f"Filtreleme hatası: {e}")
             else:
                 return "İndirilecek veri bulunamadı. Lütfen önce bir Excel dosyası yükleyin veya bir proje yükleyin.", 404
         except Exception as e:
