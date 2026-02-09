@@ -35,8 +35,8 @@ app = Flask(__name__,
             template_folder=resource_path('templates'), 
             static_folder=resource_path('static'))
 
-# Büyük projelerde "413 Request Entity Too Large" hatasını önlemek için istek gövdesi limiti (100 MB)
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
+# Büyük projelerde "413 Request Entity Too Large" hatasını önlemek için istek gövdesi limiti (Limitsiz)
+app.config['MAX_CONTENT_LENGTH'] = None
 
 def get_osrm_url():
     """OSRM URL'ini belirle (Env var > Render/Public > Localhost)"""
@@ -1179,6 +1179,25 @@ def download():
         edited_stores_data = json.loads(request.form.get('edited_stores_data', '{}'))
         # YENİ: Yeni eklenen mağazaları al
         new_stores_data = json.loads(request.form.get('new_stores_data', '[]'))
+
+        # Fallback durumunda (stores_data yoksa) yeni mağazaları base_df'e ekle
+        if not request.form.get('stores_data') and new_stores_data:
+            try:
+                new_stores_df = pd.DataFrame(new_stores_data)
+                # Eksik sütunları doldur
+                for col in base_df.columns:
+                    if col not in new_stores_df.columns:
+                        new_stores_df[col] = ""
+                # Fazla sütunları (varsa) ve sıralamayı ayarla
+                common_cols = [col for col in base_df.columns if col in new_stores_df.columns]
+                if common_cols:
+                    # Sadece ortak veya base_df'de olan sütunları al
+                    new_stores_df_aligned = pd.DataFrame(columns=base_df.columns)
+                    for col in common_cols:
+                        new_stores_df_aligned[col] = new_stores_df[col]
+                    base_df = pd.concat([base_df, new_stores_df_aligned], ignore_index=True)
+            except Exception as e:
+                print(f"Yeni mağazalar eklenirken hata: {e}")
 
     # --- GÜNCELLEME: Tüm tarihleri topla ve sırala (Gün hesaplaması için) ---
     all_scheduled_dates = set()
