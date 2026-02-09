@@ -1592,7 +1592,7 @@
                 <input type="text" id="serverPortInput" placeholder="Örn: 5000 (Boş bırakılırsa otomatik denenir)"
                     style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
                 <small style="color: #666; display: block; margin-top: 5px;">
-                    * Boş bırakıp 'Bağlan' derseniz varsayılan (localhost:5000) denenir.
+                    * Boş bırakıp 'Bağlan' derseniz varsayılan sunucu denenir.
                 </small>
             </div>
 
@@ -5447,6 +5447,7 @@
             const form = document.createElement("form");
             form.method = "POST";
             form.action = "/download";
+            form.enctype = "multipart/form-data"; // Veri boyutunu optimize et
             // Proje yüklüyse ve filtre yoksa proje adı + notlar gönder (413 önlenir; notlar her zaman güncel açıklama için gider)
             const useProjectFile = currentProjectName && !isAnyFilterActive;
             // YENİ: Veri boyutu optimizasyonu
